@@ -10,7 +10,9 @@ def predict():
 
     preprocessed_txt = preprocessing(text)
     vectorized_txt = vectorizer(preprocessed_txt)
-    prediction = get_prediction(vectorized_txt)
+
+    # 👇 IMPORTANT: Pass raw text also
+    prediction = get_prediction(vectorized_txt, text)
 
     return jsonify({"sentiment": prediction})
 

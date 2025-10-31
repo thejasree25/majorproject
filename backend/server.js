@@ -55,6 +55,16 @@ app.get("/api/comments", async (req, res) => {
   const comments = await Comment.find().sort({ createdAt: -1 });
   res.json(comments);
 });
+app.delete("/api/comment/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Comment.findByIdAndDelete(id);
+    res.json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    res.status(500).json({ error: "Failed to delete comment" });
+  }
+});
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Node server running on http://localhost:${PORT}`));
