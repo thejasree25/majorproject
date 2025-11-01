@@ -7,6 +7,8 @@ export default function App() {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const API_BASE = "https://backendmajor-t3b3.onrender.com/api";
+
   // Fetch comments on mount
   useEffect(() => {
     fetchComments();
@@ -15,10 +17,10 @@ export default function App() {
   // Load all previous comments
   const fetchComments = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/comments");
+      const res = await axios.get(`${API_BASE}/comments`);
       setHistory(res.data);
     } catch (error) {
-      console.error("Error fetching comments:", error);
+      console.error("❌ Error fetching comments:", error);
     }
   };
 
@@ -27,12 +29,12 @@ export default function App() {
     if (!comment.trim()) return;
     setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:4000/api/comment", { comment });
+      const res = await axios.post(`${API_BASE}/comment`, { comment });
       setResult(res.data.sentiment);
       setComment("");
       fetchComments();
     } catch (error) {
-      console.error("Error analyzing comment:", error);
+      console.error("❌ Error analyzing comment:", error);
     } finally {
       setIsLoading(false);
     }
@@ -41,10 +43,10 @@ export default function App() {
   // Delete comment
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/comment/${id}`);
+      await axios.delete(`${API_BASE}/comment/${id}`);
       fetchComments();
     } catch (error) {
-      console.error("Error deleting comment:", error);
+      console.error("❌ Error deleting comment:", error);
     }
   };
 
@@ -68,7 +70,7 @@ export default function App() {
     }
   };
 
-  // Sentiment label (text)
+  // Sentiment label
   const getSentimentLabel = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
       case "positive": return "good";
