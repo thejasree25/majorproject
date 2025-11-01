@@ -17,7 +17,8 @@ export const analyzeComment = async (req, res) => {
 
     console.log("🔍 Sending to ML API:", mlApiUrl);
 
-    const response = await axios.post(mlApiUrl, { text: comment });
+   const response = await axios.post(mlApiUrl, { comment });
+
     const sentiment = response.data.sentiment || "unknown";
 
     // 💾 Save to MongoDB

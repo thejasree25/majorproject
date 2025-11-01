@@ -7,17 +7,18 @@ export default function App() {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_BASE = "https://backendmajor-t3b3.onrender.com/api";
+  // ✅ Use your deployed backend URL
+ const API_BASE = "http://localhost:4000/api";
 
   // Fetch comments on mount
   useEffect(() => {
     fetchComments();
   }, []);
 
-  // Load all previous comments
+  // ✅ Corrected endpoint here
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/comments`);
+      const res = await axios.get(`${API_BASE}/comment`);
       setHistory(res.data);
     } catch (error) {
       console.error("❌ Error fetching comments:", error);
@@ -29,6 +30,7 @@ export default function App() {
     if (!comment.trim()) return;
     setIsLoading(true);
     try {
+      // ✅ This is correct
       const res = await axios.post(`${API_BASE}/comment`, { comment });
       setResult(res.data.sentiment);
       setComment("");
@@ -60,7 +62,6 @@ export default function App() {
     }
   };
 
-  // Sentiment emoji
   const getSentimentIcon = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
       case "positive": return "😊";
@@ -70,7 +71,6 @@ export default function App() {
     }
   };
 
-  // Sentiment label
   const getSentimentLabel = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
       case "positive": return "good";
