@@ -8,7 +8,9 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   // ✅ Use your deployed backend URL
- const API_BASE = "http://localhost:4000/api";
+ // ✅ Use your deployed backend URL
+const API_BASE = "https://majorproject-backend.onrender.com/api"; // replace this with yours
+
 
   // Fetch comments on mount
   useEffect(() => {
