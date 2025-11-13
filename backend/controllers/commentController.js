@@ -5,21 +5,30 @@ export const analyzeComment = async (req, res) => {
   try {
     const { comment } = req.body;
 
-    if (!comment) {
+    if (!comment || !comment.trim()) {
       return res.status(400).json({ error: "Comment is required" });
     }
 
     const mlApiUrl = process.env.ML_API_URL;
-    if (!mlApiUrl) throw new Error("ML_API_URL not configured");
+    let sentiment = "neutral"; // ✅ default fallback sentiment
 
-    const response = await axios.post(
-      mlApiUrl,
-      { comment },
-      { headers: { "Content-Type": "application/json" }, timeout: 10000 }
-    );
+    // 🔹 Try to call ML API (if available)
+    if (mlApiUrl) {
+      try {
+        const response = await axios.post(
+          mlApiUrl,
+          { text: comment }, // ✅ Flask expects 'text', not 'comment'
+          { headers: { "Content-Type": "application/json" }, timeout: 8000 }
+        );
+        sentiment = response.data?.sentiment || "neutral";
+      } catch (mlErr) {
+        console.error("⚠️ ML API error, using fallback sentiment:", mlErr.message);
+      }
+    } else {
+      console.warn("⚠️ ML_API_URL not configured, using fallback sentiment");
+    }
 
-    const sentiment = response.data.sentiment || "unknown";
-
+    // 🔹 Save to MongoDB
     const newComment = new Comment({ text: comment, sentiment });
     await newComment.save();
 
@@ -34,7 +43,8 @@ export const getComments = async (req, res) => {
   try {
     const comments = await Comment.find().sort({ createdAt: -1 });
     res.json(comments);
-  } catch {
+  } catch (error) {
+    console.error("❌ Error fetching comments:", error.message);
     res.status(500).json({ error: "Failed to fetch comments" });
   }
 };
@@ -44,7 +54,8 @@ export const deleteComment = async (req, res) => {
     const { id } = req.params;
     await Comment.findByIdAndDelete(id);
     res.json({ message: "Comment deleted successfully" });
-  } catch {
+  } catch (error) {
+    console.error("❌ Error deleting comment:", error.message);
     res.status(500).json({ error: "Failed to delete comment" });
   }
 };
