@@ -7,8 +7,8 @@ export default function App() {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
- const API_BASE = process.env.REACT_APP_API_BASE || "https://majorproject-lhuw.onrender.com/api";
-
+  const API_BASE =
+    process.env.REACT_APP_API_BASE || "https://majorproject-lhuw.onrender.com/api";
 
   useEffect(() => {
     fetchComments();
@@ -47,13 +47,16 @@ export default function App() {
     }
   };
 
+  // ✅ FIXED COLOR LOGIC
   const getSentimentColor = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
       case "positive":
+        return "bg-green-100 text-green-800 border-green-200"; // 🟩 good
       case "neutral":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-100 text-green-800 border-green-200"; // 🟩 okay
       case "negative":
-        return "bg-red-100 text-red-800 border-red-200";
+      case "bad":
+        return "bg-red-100 text-red-800 border-red-200"; // 🟥 bad
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
     }
@@ -61,19 +64,27 @@ export default function App() {
 
   const getSentimentIcon = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
-      case "positive": return "😊";
-      case "negative": return "😞";
-      case "neutral": return "😐";
-      default: return "❓";
+      case "positive":
+        return "😊";
+      case "negative":
+        return "😞";
+      case "neutral":
+        return "😐";
+      default:
+        return "❓";
     }
   };
 
   const getSentimentLabel = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
-      case "positive": return "good";
-      case "negative": return "bad";
-      case "neutral": return "okay";
-      default: return sentiment;
+      case "positive":
+        return "good";
+      case "negative":
+        return "bad";
+      case "neutral":
+        return "okay";
+      default:
+        return sentiment;
     }
   };
 
@@ -110,21 +121,26 @@ export default function App() {
 
           {result && (
             <div
-              className={`p-4 mt-6 rounded-lg border ${getSentimentColor(result)} transition-all duration-300`}
+              className={`p-4 mt-6 rounded-lg border shadow-md ${getSentimentColor(
+                result
+              )} transition-all duration-300`}
             >
               <div className="flex items-center">
                 <span className="text-2xl mr-3">{getSentimentIcon(result)}</span>
                 <div>
                   <h3 className="font-semibold">Analysis Result</h3>
                   <p className="capitalize">
-                    This text is <span className="font-bold">{getSentimentLabel(result)}</span>
+                    This text is{" "}
+                    <span className="font-bold">{getSentimentLabel(result)}</span>
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Analysis History</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">
+            Analysis History
+          </h2>
           {history.length === 0 ? (
             <p className="text-gray-500 text-center">No analysis history yet.</p>
           ) : (
@@ -137,8 +153,13 @@ export default function App() {
                   <div className="flex justify-between items-start">
                     <p className="text-gray-700 flex-1">{item.text}</p>
                     <div className="flex items-center space-x-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getSentimentColor(item.sentiment)}`}>
-                        {getSentimentIcon(item.sentiment)} {getSentimentLabel(item.sentiment)}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${getSentimentColor(
+                          item.sentiment
+                        )}`}
+                      >
+                        {getSentimentIcon(item.sentiment)}{" "}
+                        {getSentimentLabel(item.sentiment)}
                       </span>
                       <button
                         onClick={() => handleDelete(item._id)}
