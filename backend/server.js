@@ -9,11 +9,15 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  credentials: true
+}));
 app.use(express.json());
 
-// Base route prefix
 app.use("/api", commentRoutes);
+
+app.get("/", (req, res) => res.send("Backend is running..."));
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`✅ Node server running on http://localhost:${PORT}`));

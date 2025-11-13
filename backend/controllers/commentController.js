@@ -9,19 +9,17 @@ export const analyzeComment = async (req, res) => {
       return res.status(400).json({ error: "Comment is required" });
     }
 
-    // 🔗 Call ML API
     const mlApiUrl = process.env.ML_API_URL;
-    if (!mlApiUrl) {
-      throw new Error("ML_API_URL not configured in environment");
-    }
+    if (!mlApiUrl) throw new Error("ML_API_URL not configured");
 
-    console.log("🔍 Sending to ML API:", mlApiUrl);
-
-   const response = await axios.post(mlApiUrl, { comment });
+    const response = await axios.post(
+      mlApiUrl,
+      { comment },
+      { headers: { "Content-Type": "application/json" }, timeout: 10000 }
+    );
 
     const sentiment = response.data.sentiment || "unknown";
 
-    // 💾 Save to MongoDB
     const newComment = new Comment({ text: comment, sentiment });
     await newComment.save();
 
@@ -36,7 +34,7 @@ export const getComments = async (req, res) => {
   try {
     const comments = await Comment.find().sort({ createdAt: -1 });
     res.json(comments);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch comments" });
   }
 };
@@ -46,7 +44,7 @@ export const deleteComment = async (req, res) => {
     const { id } = req.params;
     await Comment.findByIdAndDelete(id);
     res.json({ message: "Comment deleted successfully" });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to delete comment" });
   }
 };
