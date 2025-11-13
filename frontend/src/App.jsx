@@ -8,7 +8,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const API_BASE =
-    process.env.REACT_APP_API_BASE || "https://majorproject-lhuw.onrender.com/api";
+    process.env.REACT_APP_API_BASE ||
+    "https://majorproject-lhuw.onrender.com/api";
 
   useEffect(() => {
     fetchComments();
@@ -47,18 +48,19 @@ export default function App() {
     }
   };
 
-    const getSentimentColor = (sentiment) => {
+  // 🟢 RED for Bad / 🔴 GREEN for Good / 🟡 YELLOW for Okay-Neutral
+  const getSentimentColor = (sentiment) => {
     if (!sentiment) return "bg-gray-100 text-gray-800 border-gray-200";
     const s = sentiment.toLowerCase();
+
     if (s.includes("bad") || s.includes("negative")) {
-      return "bg-red-100 text-red-800 border-red-200"; // 🟥 red for bad
+      return "bg-red-100 text-red-800 border-red-200"; // 🔴 BAD
     } else if (s.includes("good") || s.includes("positive")) {
-      return "bg-green-100 text-green-800 border-green-200"; // 🟩 green for good
+      return "bg-green-100 text-green-800 border-green-200"; // 🟢 GOOD
     } else if (s.includes("okay") || s.includes("neutral")) {
-      return "bg-yellow-100 text-yellow-800 border-yellow-200"; // 🟨 yellow for okay
-    } else {
-      return "bg-gray-100 text-gray-800 border-gray-200";
+      return "bg-yellow-100 text-yellow-800 border-yellow-200"; // 🟡 OKAY
     }
+    return "bg-gray-100 text-gray-800 border-gray-200";
   };
 
   const getSentimentIcon = (sentiment) => {
@@ -78,7 +80,6 @@ export default function App() {
     if (s.includes("okay") || s.includes("neutral")) return "okay";
     return sentiment;
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-8 px-4">
