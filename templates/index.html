@@ -1,53 +1,97 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <Link rel="stylesheet" href="{{url_for('static', filename='model/css/main.css')}}"></Link>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>App</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='model/css/main.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
+  <title>Feedback Analysis</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 8px;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+
+    .positive {
+      color: green;
+    }
+
+    .negative {
+      color: red;
+    }
+
+    .neutral {
+      color: orange;
+    }
+
+    .thanks {
+      font-size: 1rem;
+      color: #555;
+      margin-top: 10px;
+    }
+  </style>
 </head>
+
 <body>
-
-    <div class="split left">
-        <div class="centered">
-            <img src="../static/model/products/prod1.jpg" alt="">
-        </div>
+  <div class="split left">
+    <div class="centered">
+      <img src="../static/model/products/prod1.jpg" alt="Product">
     </div>
+  </div>
 
+  <div class="split right">
+    <div class="container mt-5 mb-5">
+      <div class="d-flex justify-content-center row">
+        <div class="d-flex flex-column col-md-8">
+          <div class="mb-3">
+            <label>Positive Reviews: {{ data.positive }}</label><br>
+            <label>Negative Reviews: {{ data.negative }}</label>
+          </div>
 
-    <div class="split right">
-        <div class="container mt-5 mb-5">
-            <div class="d-flex justify-content-center row">
-                <div class="d-flex flex-column col-md-8">
-                    <div>
-                        <label for="">Positive Reviews : {{ data.positive }}</label>
-                    </div>
-                    <div>
-                        <label for="">Negative Reviews : {{ data.negative }}</label>
-                    </div>
-                    <div>
-                        <form method="post">
-                          <textarea name="text"></textarea>
-                          <input type="submit">
-                        </form>
-                    </div>
+          <form method="post">
+            <textarea name="text" placeholder="Enter your feedback here..." required></textarea><br>
+            <input type="submit" class="btn btn-primary mt-2" value="Submit Feedback">
+          </form>
 
-                    <div class="coment-bottom bg-white p-2 px-4">
-                        {% for review in data.reviews %}
-                        <hr/>
-                          <div
-                              class="commented-section mt-2">
-                              <div class="d-flex flex-row align-items-center commented-user">
-                                  </div>
-                                  <div class="text-nowrap bd-highlight"><span>{{ review }}</span></div>
-                                  <hr/>
-                        {% endfor %}
-                      </div>
-                </div>
+          {% if prediction %}
+            <div class="result 
+                {% if prediction == 'positive' %}positive
+                {% elif prediction == 'negative' %}negative
+                {% else %}neutral{% endif %}">
+              😊 Analysis Result: This feedback is {{ prediction }}.
             </div>
-        </div>
-    </div>
+            <div class="thanks">🎉 Thanks for your feedback!</div>
+          {% endif %}
 
+          <div class="coment-bottom bg-white p-2 px-4 mt-3">
+            {% for review in data.reviews %}
+              <hr/>
+              <div class="commented-section mt-2">
+                <div class="text-nowrap bd-highlight">
+                  <span>{{ review }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
