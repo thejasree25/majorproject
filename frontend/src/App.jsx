@@ -7,7 +7,8 @@ export default function App() {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_BASE = "http://localhost:4000/api"; // ✅ Local backend
+ const API_BASE = process.env.REACT_APP_API_BASE || "https://majorproject-lhuw.onrender.com/api";
+
 
   useEffect(() => {
     fetchComments();
