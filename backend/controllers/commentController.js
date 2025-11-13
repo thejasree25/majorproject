@@ -10,8 +10,9 @@ export const analyzeComment = async (req, res) => {
     }
 
     const mlApiUrl = process.env.ML_API_URL;
-    let sentiment = "neutral"; // fallback
+    let sentiment = "neutral"; // default fallback
 
+    // 🔹 Try ML API first
     if (mlApiUrl) {
       try {
         const response = await axios.post(
@@ -19,14 +20,44 @@ export const analyzeComment = async (req, res) => {
           { text: comment },
           { headers: { "Content-Type": "application/json" }, timeout: 8000 }
         );
+
         sentiment = response.data?.sentiment || "neutral";
       } catch (mlErr) {
-        console.error("⚠️ ML API error, fallback sentiment used:", mlErr.message);
+        console.error("⚠️ ML API error:", mlErr.message);
       }
     } else {
-      console.warn("⚠️ ML_API_URL not configured, using fallback sentiment");
+      console.warn("⚠️ ML_API_URL not configured, using fallback logic");
     }
 
+    // 🔹 Simple fallback logic (if ML API is missing or fails)
+    if (!mlApiUrl || sentiment === "neutral") {
+      const text = comment.toLowerCase();
+
+      if (
+        text.includes("bad") ||
+        text.includes("poor") ||
+        text.includes("worst") ||
+        text.includes("terrible") ||
+        text.includes("hate") ||
+        text.includes("awful") ||
+        text.includes("disgusting")
+      ) {
+        sentiment = "negative";
+      } else if (
+        text.includes("good") ||
+        text.includes("excellent") ||
+        text.includes("great") ||
+        text.includes("amazing") ||
+        text.includes("love") ||
+        text.includes("wonderful")
+      ) {
+        sentiment = "positive";
+      } else {
+        sentiment = "neutral";
+      }
+    }
+
+    // 🔹 Save to MongoDB
     const newComment = new Comment({ text: comment, sentiment });
     await newComment.save();
 
