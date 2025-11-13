@@ -47,53 +47,38 @@ export default function App() {
     }
   };
 
-  // ✅ Finalized color logic (handles 'good', 'bad', 'okay', etc.)
-  const getSentimentColor = (sentiment) => {
-    switch (sentiment?.toLowerCase()) {
-      case "positive":
-      case "good":
-      case "neutral":
-      case "okay":
-        return "bg-green-100 text-green-800 border-green-200"; // 🟩 Green for okay/good
-      case "negative":
-      case "bad":
-        return "bg-red-100 text-red-800 border-red-200"; // 🟥 Red for bad
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+    const getSentimentColor = (sentiment) => {
+    if (!sentiment) return "bg-gray-100 text-gray-800 border-gray-200";
+    const s = sentiment.toLowerCase();
+    if (s.includes("bad") || s.includes("negative")) {
+      return "bg-red-100 text-red-800 border-red-200"; // 🟥 red for bad
+    } else if (s.includes("good") || s.includes("positive")) {
+      return "bg-green-100 text-green-800 border-green-200"; // 🟩 green for good
+    } else if (s.includes("okay") || s.includes("neutral")) {
+      return "bg-yellow-100 text-yellow-800 border-yellow-200"; // 🟨 yellow for okay
+    } else {
+      return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   const getSentimentIcon = (sentiment) => {
-    switch (sentiment?.toLowerCase()) {
-      case "positive":
-      case "good":
-        return "😊";
-      case "negative":
-      case "bad":
-        return "😞";
-      case "neutral":
-      case "okay":
-        return "😐";
-      default:
-        return "❓";
-    }
+    if (!sentiment) return "❓";
+    const s = sentiment.toLowerCase();
+    if (s.includes("bad") || s.includes("negative")) return "😞";
+    if (s.includes("good") || s.includes("positive")) return "😊";
+    if (s.includes("okay") || s.includes("neutral")) return "😐";
+    return "❓";
   };
 
   const getSentimentLabel = (sentiment) => {
-    switch (sentiment?.toLowerCase()) {
-      case "positive":
-      case "good":
-        return "good";
-      case "negative":
-      case "bad":
-        return "bad";
-      case "neutral":
-      case "okay":
-        return "okay";
-      default:
-        return sentiment;
-    }
+    if (!sentiment) return "";
+    const s = sentiment.toLowerCase();
+    if (s.includes("bad") || s.includes("negative")) return "bad";
+    if (s.includes("good") || s.includes("positive")) return "good";
+    if (s.includes("okay") || s.includes("neutral")) return "okay";
+    return sentiment;
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-8 px-4">
