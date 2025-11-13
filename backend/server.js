@@ -10,10 +10,15 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:3000"],
+  origin: [
+    "http://localhost:3000",              // local dev
+    "https://majorproject-iwb9.vercel.app" // your Vercel frontend
+  ],
+  methods: ["GET", "POST", "DELETE"],
+  allowedHeaders: ["Content-Type"],
   credentials: true
 }));
-app.use(express.json());
+
 
 app.use("/api", commentRoutes);
 
