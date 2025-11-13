@@ -9,22 +9,22 @@ connectDB();
 
 const app = express();
 
+app.use(express.json());
+
 app.use(cors({
   origin: [
-    "http://localhost:3000",                // local dev
-    "https://majorproject-iwb9.vercel.app", // old Vercel build
-    "https://majorproject-orpin.vercel.app" // ✅ current deployed frontend
+    "http://localhost:3000",                 // local dev
+    "https://majorproject-iwb9.vercel.app",  // old frontend
+    "https://majorproject-orpin.vercel.app"  // ✅ current frontend
   ],
   methods: ["GET", "POST", "DELETE"],
   allowedHeaders: ["Content-Type"],
   credentials: true
 }));
 
-
-
 app.use("/api", commentRoutes);
 
 app.get("/", (req, res) => res.send("Backend is running..."));
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`✅ Node server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`✅ Node server running on port ${PORT}`));
