@@ -11,13 +11,15 @@ const app = express();
 
 app.use(cors({
   origin: [
-    "http://localhost:3000",              // local dev
-    "https://majorproject-iwb9.vercel.app" // your Vercel frontend
+    "http://localhost:3000",                // local dev
+    "https://majorproject-iwb9.vercel.app", // old Vercel build
+    "https://majorproject-orpin.vercel.app" // ✅ current deployed frontend
   ],
   methods: ["GET", "POST", "DELETE"],
   allowedHeaders: ["Content-Type"],
   credentials: true
 }));
+
 
 
 app.use("/api", commentRoutes);
