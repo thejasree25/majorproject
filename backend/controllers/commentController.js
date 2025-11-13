@@ -10,25 +10,23 @@ export const analyzeComment = async (req, res) => {
     }
 
     const mlApiUrl = process.env.ML_API_URL;
-    let sentiment = "neutral"; // ✅ default fallback sentiment
+    let sentiment = "neutral"; // fallback
 
-    // 🔹 Try to call ML API (if available)
     if (mlApiUrl) {
       try {
         const response = await axios.post(
           mlApiUrl,
-          { text: comment }, // ✅ Flask expects 'text', not 'comment'
+          { text: comment },
           { headers: { "Content-Type": "application/json" }, timeout: 8000 }
         );
         sentiment = response.data?.sentiment || "neutral";
       } catch (mlErr) {
-        console.error("⚠️ ML API error, using fallback sentiment:", mlErr.message);
+        console.error("⚠️ ML API error, fallback sentiment used:", mlErr.message);
       }
     } else {
       console.warn("⚠️ ML_API_URL not configured, using fallback sentiment");
     }
 
-    // 🔹 Save to MongoDB
     const newComment = new Comment({ text: comment, sentiment });
     await newComment.save();
 
