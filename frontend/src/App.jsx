@@ -47,16 +47,17 @@ export default function App() {
     }
   };
 
-  // ✅ FIXED COLOR LOGIC
+  // ✅ Finalized color logic (handles 'good', 'bad', 'okay', etc.)
   const getSentimentColor = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
       case "positive":
-        return "bg-green-100 text-green-800 border-green-200"; // 🟩 good
+      case "good":
       case "neutral":
-        return "bg-green-100 text-green-800 border-green-200"; // 🟩 okay
+      case "okay":
+        return "bg-green-100 text-green-800 border-green-200"; // 🟩 Green for okay/good
       case "negative":
       case "bad":
-        return "bg-red-100 text-red-800 border-red-200"; // 🟥 bad
+        return "bg-red-100 text-red-800 border-red-200"; // 🟥 Red for bad
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
     }
@@ -65,10 +66,13 @@ export default function App() {
   const getSentimentIcon = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
       case "positive":
+      case "good":
         return "😊";
       case "negative":
+      case "bad":
         return "😞";
       case "neutral":
+      case "okay":
         return "😐";
       default:
         return "❓";
@@ -78,10 +82,13 @@ export default function App() {
   const getSentimentLabel = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
       case "positive":
+      case "good":
         return "good";
       case "negative":
+      case "bad":
         return "bad";
       case "neutral":
+      case "okay":
         return "okay";
       default:
         return sentiment;
