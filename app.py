@@ -1,30 +1,39 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import pickle
-from helper import preprocessing, vectorizer, get_prediction
+from flask import Flask, render_template, request
+import pickle, re, string
+from nltk.stem import PorterStemmer
 
 app = Flask(__name__)
-CORS(app)  # ✅ Allow access from Node & React
+ps = PorterStemmer()
 
-# ------------------ MODEL LOADING ------------------
-print("🔄 Loading model...")
+# Load model
 with open('static/model/model.pickle', 'rb') as f:
     model = pickle.load(f)
-print("✅ Model loaded successfully")
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    data = request.get_json()
-    text = data.get("comment")
+# Example global data storage
+data = {
+    "positive": 0,
+    "negative": 0,
+    "reviews": []
+}
 
-    if not text:
-        return jsonify({"error": "No comment provided"}), 400
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    prediction = None
+    if request.method == 'POST':
+        text = request.form['text']
+        data['reviews'].append(text)
 
-    preprocessed_txt = preprocessing(text)
-    vectorized_txt = vectorizer(preprocessed_txt)
+        # Simple example: get prediction
+        pred = model.predict([text])[0]
 
-    prediction = get_prediction(vectorized_txt, text)
-    return jsonify({"sentiment": prediction})
+        if pred == 'positive':
+            data['positive'] += 1
+        elif pred == 'negative':
+            data['negative'] += 1
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+        prediction = pred.lower()
+
+    return render_template('index.html', data=data, prediction=prediction)
+
+if __name__ == '__main__':
+    app.run(debug=True)
