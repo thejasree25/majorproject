@@ -48,17 +48,20 @@ export default function App() {
     }
   };
 
-  // 🟢 RED for Bad / 🔴 GREEN for Good / 🟡 YELLOW for Okay-Neutral
+  // ✅ Red for Negative, Green for Neutral/Positive
   const getSentimentColor = (sentiment) => {
     if (!sentiment) return "bg-gray-100 text-gray-800 border-gray-200";
     const s = sentiment.toLowerCase();
 
     if (s.includes("bad") || s.includes("negative")) {
-      return "bg-red-100 text-red-800 border-red-200"; // 🔴 BAD
-    } else if (s.includes("good") || s.includes("positive")) {
-      return "bg-green-100 text-green-800 border-green-200"; // 🟢 GOOD
-    } else if (s.includes("okay") || s.includes("neutral")) {
-      return "bg-yellow-100 text-yellow-800 border-yellow-200"; // 🟡 OKAY
+      return "bg-red-100 text-red-800 border-red-200"; // 🔴 Negative
+    } else if (
+      s.includes("good") ||
+      s.includes("positive") ||
+      s.includes("neutral") ||
+      s.includes("okay")
+    ) {
+      return "bg-green-100 text-green-800 border-green-200"; // 🟢 Neutral/Positive
     }
     return "bg-gray-100 text-gray-800 border-gray-200";
   };
@@ -66,18 +69,28 @@ export default function App() {
   const getSentimentIcon = (sentiment) => {
     if (!sentiment) return "❓";
     const s = sentiment.toLowerCase();
-    if (s.includes("bad") || s.includes("negative")) return "😞";
-    if (s.includes("good") || s.includes("positive")) return "😊";
-    if (s.includes("okay") || s.includes("neutral")) return "😐";
+    if (s.includes("bad") || s.includes("negative")) return "😡"; // 🔴 Angry
+    if (
+      s.includes("good") ||
+      s.includes("positive") ||
+      s.includes("neutral") ||
+      s.includes("okay")
+    )
+      return "😊"; // 🟢 Happy
     return "❓";
   };
 
   const getSentimentLabel = (sentiment) => {
     if (!sentiment) return "";
     const s = sentiment.toLowerCase();
-    if (s.includes("bad") || s.includes("negative")) return "bad";
-    if (s.includes("good") || s.includes("positive")) return "good";
-    if (s.includes("okay") || s.includes("neutral")) return "okay";
+    if (s.includes("bad") || s.includes("negative")) return "negative";
+    if (
+      s.includes("good") ||
+      s.includes("positive") ||
+      s.includes("neutral") ||
+      s.includes("okay")
+    )
+      return "positive";
     return sentiment;
   };
 
